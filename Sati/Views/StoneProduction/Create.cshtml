@@ -1,0 +1,93 @@
+﻿@model Sati.Models.StoneProductionViewModel
+@{
+    ViewBag.Title = "Create Stone Production";
+}
+
+<h2>Create Production Record</h2>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@using (Html.BeginForm("Create", "StoneProduction", FormMethod.Post))
+{
+    <div class="form-group">
+        @Html.LabelFor(model => model.StoneName)
+        @Html.TextBoxFor(model => model.StoneName, new { @class = "form-control" })
+    </div>
+
+    @if (Model.StoneProductions != null && Model.StoneProductions.Any())
+    {
+        @for (int i = 0; i < Model.StoneProductions.Count; i++)
+        {
+            var productionStep = Model.StoneProductions[i].ProductionStep;
+            if (productionStep != null)
+            {
+                <div class="form-group">
+                    <label>@productionStep.StepName</label>
+                    @Html.DropDownListFor(
+                            model => model.StoneProductions[i].Status,
+                            new SelectList(new[] { "NotStarted", "InProgress", "Complete", "Skipped", "Damaged", "Broke" }),
+                            new { @class = "form-control", onchange = $"updateStepStatus({Model.StoneProductions[i].StoneProductionId}, this.value)" }
+                            )
+                </div>
+            }
+        }
+    }
+
+    else
+    {
+        <p>No production steps available.</p>
+    }
+
+    <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Save</button>
+}
+
+<hr />
+
+<h2>Search Stone Production Status and Track the Progress.</h2>
+@using (Html.BeginForm("Search", "StoneProduction", FormMethod.Get))
+{
+    <div class="form-group">
+        @Html.LabelFor(model => model.SearchStoneName, "Search by Stone Name")
+        @Html.TextBoxFor(model => model.SearchStoneName, new { @class = "form-control" })
+    </div>
+    <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Search</button>
+
+    <br /> 
+    @if (Model.StoneProductionTableData != null && Model.StoneProductionTableData.Any())
+    {
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Stone ID</th>
+                    <th>Stone Name</th>
+                    @foreach (var step in Model.ProductionSteps)
+                    {
+                        <th>@step.StepName</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.StoneProductionTableData)
+                {
+                    <tr>
+                        <td>@item.StoneId</td>
+                        <td>@item.StoneName</td>
+                        @foreach (var status in item.ProductionStatuses)
+                        {
+                            <td>@status</td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No records found.</p>
+    }
+}
