@@ -108,7 +108,11 @@
             <div class="modal-body">
                 @using (Html.BeginForm("EditStoneProduction", "StoneProduction", FormMethod.Post, new { id = "editForm" }))
                 {
-                    @Html.Hidden("StoneId", "")
+                    @Html.Hidden("StoneId", "") <!-- This hidden field will store the actual StoneId -->
+                    <div class="form-group">
+                        @Html.Label("Stone ID")
+                        @Html.TextBox("StoneIdDisplay", "", new { @class = "form-control", @readonly = "readonly" }) <!-- Read-only field to display StoneId -->
+                    </div>
                     <div class="form-group">
                         @Html.Label("Stone Name")
                         @Html.TextBox("StoneName", "", new { @class = "form-control", @readonly = "readonly" })
@@ -124,10 +128,12 @@
     </div>
 </div>
 
+
 <script>
     function openEditModal(stoneId, stoneName) {
         // Populate the modal with the data
-        $('#editModal #StoneId').val(stoneId);
+        $('#editModal #StoneId').val(stoneId); // Hidden field
+        $('#editModal #StoneIdDisplay').val(stoneId); // Read-only display field
         $('#editModal #StoneName').val(stoneName);
 
         // Fetch the production steps and statuses via AJAX
@@ -141,4 +147,5 @@
             }
         });
     }
+
 </script>
