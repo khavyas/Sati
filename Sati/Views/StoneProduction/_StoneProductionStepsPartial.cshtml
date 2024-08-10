@@ -7,6 +7,19 @@
         <label><strong>@item.ProductionStep.StepName</strong></label>
         @Html.DropDownList("Statuses[" + item.StoneProductionId + "]",
                 new SelectList(new[] { "NotStarted", "InProgress", "Complete", "Skipped", "Damaged", "Broke" }, item.Status),
-                new { @class = "form-control" })
+                new { @class = "form-control dropdown-arrow" }) <!-- Added class here -->
     </div>
 }
+
+<style>
+    .dropdown-arrow {
+        appearance: none; /* Remove default arrow */
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D'http%3A//www.w3.org/2000/svg'%20viewBox%3D'0%200%20292.4%20492.4'%3E%3Cpath%20fill%3D'%23333'%20d%3D'M287%20164.4l-135%20135c-4.7%204.7-12.3%204.7-17%200l-135-135c-7.6-7.6-2.2-20.4%208.5-20.4h270c10.7%200%2016.1%2012.9%208.5%2020.4z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        background-size: 10px;
+        padding-right: 30px;
+    }
+</style>
