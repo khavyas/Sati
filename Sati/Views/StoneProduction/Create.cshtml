@@ -38,60 +38,65 @@
         }
     }
 
-    <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Save</button>
+    <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Create</button>
 }
 
 <hr />
 
 <h2>Search Stone Production Status and Track the Progress.</h2>
-@using (Html.BeginForm("Search", "StoneProduction", FormMethod.Get))
+@using (Html.BeginForm("Search", "StoneProduction", FormMethod.Get, new { id = "searchForm" }))
 {
     <div class="form-group">
         @Html.LabelFor(model => model.SearchStoneName, "Search by Stone Name")
-        @Html.TextBoxFor(model => model.SearchStoneName, new { @class = "form-control" })
+        @Html.TextBoxFor(model => model.SearchStoneName, new { @class = "form-control", id = "searchStoneName" })
     </div>
     <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Search</button>
-
+    <button type="button" class="btn btn-secondary" style="margin-top: 20px; margin-left: 10px;" onclick="clearSearch()">Clear</button>
     <br />
+
+    <!-- Table and No Records Message HTML -->
     @if (Model.StoneProductionTableData != null && Model.StoneProductionTableData.Any())
-    {
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Stone ID</th>
-                    <th>Stone Name</th>
-                    @foreach (var step in Model.ProductionSteps)
-                    {
-                        <th>@step.StepName</th>
-                    }
-                    <th>Edit</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.StoneProductionTableData)
-                {
+    { 
+        <div id="tableContainer">
+            <table class="table table-bordered">
+                <thead>
                     <tr>
-                        <td>@item.StoneId</td>
-                        <td>@item.StoneName</td>
-                        @foreach (var status in item.ProductionStatuses)
+                        <th>Stone ID</th>
+                        <th>Stone Name</th>
+                        @foreach (var step in Model.ProductionSteps)
                         {
-                            <td>@status</td>
+                            <th>@step.StepName</th>
                         }
-                        <td>
-                            <button type="button" class="btn btn-secondary" onclick="openEditModal(@item.StoneId, '@item.StoneName')">Edit</button>
-                        </td>
+                        <th>Edit</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.StoneProductionTableData)
+                    {
+                        <tr>
+                            <td>@item.StoneId</td>
+                            <td>@item.StoneName</td>
+                            @foreach (var status in item.ProductionStatuses)
+                            {
+                                <td>@status</td>
+                            }
+                            <td>
+                                <button type="button" class="btn btn-secondary" onclick="openEditModal(@item.StoneId, '@item.StoneName')">Edit</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     }
     else if (!string.IsNullOrEmpty(Model.SearchStoneName))
     {
-        <div class="no-records-box">
+        <div id="noRecordsMessage" class="no-records-box">
             <p>No records found.</p>
         </div>
     }
 }
+
 <!-- Modal HTML -->
 <div id="editModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -143,6 +148,17 @@
                 $('#editModal').modal('show');
             }
         });
+    }
+
+    function clearSearch() {
+        // Clear the search text box
+        $('#searchStoneName').val('');
+
+        // Clear the "No records found" message, if present
+        $('#noRecordsMessage').remove();
+
+        // Clear the table content, if present
+        $('#tableContainer').remove();
     }
 
 </script>
