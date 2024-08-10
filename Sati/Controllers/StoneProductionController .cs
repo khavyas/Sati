@@ -171,5 +171,38 @@ namespace Sati.Controllers
             return RedirectToAction("Search", new { stoneName = stoneProduction?.Stone?.StoneName });
         }
 
+        public IActionResult GetStoneProductionSteps(int stoneId)
+        {
+            var stoneProductions = _context.StoneProductions
+                .Include(sp => sp.ProductionStep)
+                .Where(sp => sp.StoneId == stoneId)
+                .ToList();
+
+            return PartialView("_StoneProductionStepsPartial", stoneProductions);
+        }
+
+
+        [HttpPost]
+        public IActionResult EditStoneProduction(int StoneId, string StoneName, Dictionary<int, string> Statuses)
+        {
+            foreach (var status in Statuses)
+            {
+                var stoneProduction = _context.StoneProductions
+                    .FirstOrDefault(sp => sp.StoneProductionId == status.Key);
+
+                if (stoneProduction != null)
+                {
+                    stoneProduction.Status = status.Value;
+                }
+            }
+
+            _context.SaveChanges();
+            TempData["SuccessMessage"] = "Production steps updated successfully.";
+            return RedirectToAction("Search", new { SearchStoneName = StoneName });
+        }
+
+
+
+
     }
 }

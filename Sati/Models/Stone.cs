@@ -56,6 +56,11 @@ namespace Sati.Models
         public DateTime? EndTime { get; set; }
     }
 
+    public class StoneProductionStepsViewModel
+    {
+        public int StoneId { get; set; }
+        public List<StoneProduction> StoneProductions { get; set; }
+    }
 
 
 

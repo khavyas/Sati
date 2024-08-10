@@ -37,7 +37,6 @@
             }
         }
     }
-
     else
     {
         <p>No production steps available.</p>
@@ -57,7 +56,7 @@
     </div>
     <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Search</button>
 
-    <br /> 
+    <br />
     @if (Model.StoneProductionTableData != null && Model.StoneProductionTableData.Any())
     {
         <table class="table table-bordered">
@@ -69,6 +68,7 @@
                     {
                         <th>@step.StepName</th>
                     }
+                    <th>Edit</th>
                 </tr>
             </thead>
             <tbody>
@@ -81,6 +81,9 @@
                         {
                             <td>@status</td>
                         }
+                        <td>
+                            <button type="button" class="btn btn-secondary" onclick="openEditModal(@item.StoneId, '@item.StoneName')">Edit</button>
+                        </td>
                     </tr>
                 }
             </tbody>
@@ -91,3 +94,51 @@
         <p>No records found.</p>
     }
 }
+
+<!-- Modal HTML -->
+<div id="editModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Edit Stone Production</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("EditStoneProduction", "StoneProduction", FormMethod.Post, new { id = "editForm" }))
+                {
+                    @Html.Hidden("StoneId", "")
+                    <div class="form-group">
+                        @Html.Label("Stone Name")
+                        @Html.TextBox("StoneName", "", new { @class = "form-control", @readonly = "readonly" })
+                    </div>
+                    <div id="productionStepsContainer"></div>
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="$('#editForm').submit();">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openEditModal(stoneId, stoneName) {
+        // Populate the modal with the data
+        $('#editModal #StoneId').val(stoneId);
+        $('#editModal #StoneName').val(stoneName);
+
+        // Fetch the production steps and statuses via AJAX
+        $.ajax({
+            url: '@Url.Action("GetStoneProductionSteps", "StoneProduction")',
+            type: 'GET',
+            data: { stoneId: stoneId },
+            success: function (response) {
+                $('#productionStepsContainer').html(response);
+                $('#editModal').modal('show');
+            }
+        });
+    }
+</script>

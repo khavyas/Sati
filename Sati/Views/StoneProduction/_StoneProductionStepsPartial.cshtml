@@ -1,0 +1,12 @@
+﻿@model List<Sati.Models.StoneProduction>
+
+@foreach (var item in Model)
+{
+    <div class="form-group">
+        <!-- Bold the Step Name -->
+        <label><strong>@item.ProductionStep.StepName</strong></label>
+        @Html.DropDownList("Statuses[" + item.StoneProductionId + "]",
+                new SelectList(new[] { "NotStarted", "InProgress", "Complete", "Skipped", "Damaged", "Broke" }, item.Status),
+                new { @class = "form-control" })
+    </div>
+}
