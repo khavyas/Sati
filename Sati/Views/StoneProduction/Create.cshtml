@@ -37,10 +37,6 @@
             }
         }
     }
-    else
-    {
-        <p>No production steps available.</p>
-    }
 
     <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Save</button>
 }
@@ -89,12 +85,11 @@
             </tbody>
         </table>
     }
-    else
+    else if (!string.IsNullOrEmpty(Model.SearchStoneName))
     {
         <p>No records found.</p>
     }
 }
-
 <!-- Modal HTML -->
 <div id="editModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">

@@ -92,15 +92,12 @@ namespace Sati.Controllers
         [HttpGet]
         public IActionResult Search(string SearchStoneName)
         {
-            // Fetch all stones that match the search query
             var stones = _context.Stones
                 .Where(s => s.StoneName.Contains(SearchStoneName))
                 .ToList();
 
-            // Fetch all production steps
             var productionSteps = _context.ProductionSteps.ToList();
 
-            // Prepare the list of view models for the table display
             var searchResults = stones.Select(stone => new StoneProductionTableViewModel
             {
                 StoneId = stone.StoneId,
@@ -111,9 +108,6 @@ namespace Sati.Controllers
                     .FirstOrDefault() ?? "NotStarted").ToList()
             }).ToList();
 
-
-
-            // Pass the results to the view
             return View("Create", new StoneProductionViewModel
             {
                 SearchStoneName = SearchStoneName,
