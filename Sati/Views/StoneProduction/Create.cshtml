@@ -87,7 +87,9 @@
     }
     else if (!string.IsNullOrEmpty(Model.SearchStoneName))
     {
-        <p>No records found.</p>
+        <div class="no-records-box">
+            <p>No records found.</p>
+        </div>
     }
 }
 <!-- Modal HTML -->
@@ -144,3 +146,15 @@
     }
 
 </script>
+
+
+<style>
+    .no-records-box {
+        border: 1px solid #f5c6cb;
+        background-color: #f8d7da;
+        color: #721c24;
+        padding: 10px;
+        border-radius: 5px;
+        margin-top: 10px;
+    }
+</style>
